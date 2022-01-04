@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", initApp);
 
 //Globals
 const taskList = document.querySelector(".task_list");
+const userList = document.querySelector("select.input_task");
 let tasks = [];
 let users = [];
 
@@ -17,7 +18,7 @@ function printTasks({id, userId, title, completed}) {
     const li = document.createElement("li");
     li.className = "task_item";
     li.dataset.id = id;
-    li.innerHTML = `<span>${title} <i>by</i> <b>${getUserName(userId)}</b>`
+    li.innerHTML = `<span class="item_txt">${title} <i>by</i> <b>${getUserName(userId)}</b>`;
 
     const status = document.createElement("input");
     status.type = "checkbox";
@@ -34,6 +35,14 @@ function printTasks({id, userId, title, completed}) {
 
 }
 
+function printUsers(id, name) {
+    const option = document.createElement("option");
+    option.innerText = name;
+
+    userList.prepend(option);
+
+}
+
 //Event logic
 
 function initApp() {
@@ -41,8 +50,8 @@ function initApp() {
         values => {
             [tasks, users] = values; 
             
-            //Отправить в разметку
             tasks.forEach(task => printTasks(task));
+            users.forEach(user => printUsers(user.id, user.name));
         } 
     );
 
