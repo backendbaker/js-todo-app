@@ -14,12 +14,15 @@
         <div class="header">
             <h1 class="title">Todo application<span>.</span></h1>
         </div>
+        <form autocomplete="off">
+            <input name="task_text" type="text" class="input_task" value="enter a task text">
+            <select name="user_list" id="ul" class="input_task">
+                <option selected disabled>select user</option>
+            </select>
+            <button class="add_button">Create task</button>
 
-        <input type="text" class="input_task" value="enter a task text">
-        <select name="user_list" id="ul" class="input_task">
-            <option selected disabled>select user</option>
-        </select>
-        <button class="add_button">Create task</button>
+        </form>
+        
 
         <ul class="task_list">
 

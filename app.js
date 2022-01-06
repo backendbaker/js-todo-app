@@ -1,13 +1,25 @@
 // Attach Events
 document.addEventListener("DOMContentLoaded", initApp);
+document.addEventListener('submit', handleSubmit);
 
 //Globals
 const taskList = document.querySelector(".task_list");
 const userList = document.querySelector("select.input_task");
+const form = document.querySelector("form");
 let tasks = [];
 let users = [];
 
 //Basic logic
+function handleSubmit(event) {
+    event.preventDefault();
+
+    createTask({
+        userId: Number(form.user_list.value),
+        title: form.task_text.value,
+        completed: false,
+    });
+}
+
 function getUserName(userId)
 {
     const user = users.find(u => u.id === userId);
@@ -35,9 +47,10 @@ function printTasks({id, userId, title, completed}) {
 
 }
 
-function printUsers(id, name) {
+function printUsers(user) {
     const option = document.createElement("option");
-    option.innerText = name;
+    option.innerText = user.name;
+    option.value = user.id;
 
     userList.prepend(option);
 
@@ -51,12 +64,11 @@ function initApp() {
             [tasks, users] = values; 
             
             tasks.forEach(task => printTasks(task));
-            users.forEach(user => printUsers(user.id, user.name));
+            users.forEach(user => printUsers(user));
         } 
     );
 
 }
-
 
 // Async logic
 async function getAllTasks() {
@@ -73,3 +85,19 @@ async function getAllUsers() {
     return data;
 }
 
+async function createTask(task)
+{
+    const response = await fetch("https://jsonplaceholder.typicode.com/todos", {
+        method: "POST",
+        body: JSON.stringify(task),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+
+    const taskId = await response.json();
+    console.log(taskId);
+    
+    printTasks({id: taskId, ...task});
+}
