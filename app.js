@@ -35,6 +35,7 @@ function printTasks({id, userId, title, completed}) {
     const status = document.createElement("input");
     status.type = "checkbox";
     status.checked = completed;
+    status.addEventListener("change", handleTaskChange);
 
     const close = document.createElement("span");
     close.innerHTML = "&times;";
@@ -70,6 +71,13 @@ function initApp() {
 
 }
 
+function handleTaskChange() {
+    const taskId = this.parentElement.dataset.id;
+    const completed = this.checked;
+
+    toggleTaskComplete({taskId, completed});
+}
+
 // Async logic
 async function getAllTasks() {
     const respone = await fetch("https://jsonplaceholder.typicode.com/todos");
@@ -100,4 +108,21 @@ async function createTask(task)
     console.log(taskId);
     
     printTasks({id: taskId, ...task});
+}
+
+async function toggleTaskComplete({taskId, completed}) {
+    const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${taskId}`,{
+        method: "PATCH",
+        body: JSON.stringify({completed: completed}),
+        headers: {
+            "Content-Type": "application/json"
+        },
+    });
+
+    const responseData = await response.json();
+    console.log(responseData);
+
+    if (!response.ok) {
+        console.error("Error");
+    }
 }
