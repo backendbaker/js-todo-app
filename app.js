@@ -40,12 +40,18 @@ function printTasks({id, userId, title, completed}) {
     const close = document.createElement("span");
     close.innerHTML = "&times;";
     close.className = "close";
+    close.addEventListener('click', handleDeleteTask);
 
     li.prepend(status);
     li.append(close);
 
     taskList.prepend(li);
 
+}
+
+function handleDeleteTask() {
+    const taskId = this.parentElement.dataset.id;
+    deleteTask(taskId);
 }
 
 function printUsers(user) {
@@ -55,6 +61,15 @@ function printUsers(user) {
 
     userList.prepend(option);
 
+}
+
+function removeTask(taskId) {
+    tasks = tasks.filter(task => task.id !== taskId);
+
+    const task = taskList.querySelector(`[data-id="${taskId}"]`);
+    task.querySelector("input").removeEventListener('change', handleTaskChange);
+    task.querySelector('.close').removeEventListener('click', handleDeleteTask);
+    task.remove();
 }
 
 //Event logic
@@ -125,4 +140,15 @@ async function toggleTaskComplete({taskId, completed}) {
     if (!response.ok) {
         console.error("Error");
     }
+}
+
+async function deleteTask(taskId) {
+    const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${taskId}`, {
+        method: "DELETE",
+    });
+
+    if (response.ok){
+        removeTask(taskId);
+    }
+
 }
