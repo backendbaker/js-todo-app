@@ -72,6 +72,9 @@ function removeTask(taskId) {
     task.remove();
 }
 
+function alertError(error) {
+    
+}
 //Event logic
 
 function initApp() {
@@ -95,7 +98,7 @@ function handleTaskChange() {
 
 // Async logic
 async function getAllTasks() {
-    const respone = await fetch("https://jsonplaceholder.typicode.com/todos");
+    const respone = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=5");
     const data = await respone.json();
 
     return data;
@@ -150,5 +153,4 @@ async function deleteTask(taskId) {
     if (response.ok){
         removeTask(taskId);
     }
-
 }
